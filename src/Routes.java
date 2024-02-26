@@ -3,13 +3,13 @@ public class Routes {
     private int idRoute;
     private Villes VilleDepart;
     private Villes VilleArrivee;
-    private int duree;
+    private int distance;
 
-    public Routes(int idRoute, Villes VilleDepart, Villes VilleArrivee, int duree) {
+    public Routes(int idRoute, Villes VilleDepart, Villes VilleArrivee, int distance) {
         this.idRoute = idRoute;
         this.VilleDepart = VilleDepart;
         this.VilleArrivee = VilleArrivee;
-        this.duree = duree;
+        this.distance = distance;
     }
 
     public Villes getVilleDepart() {
@@ -25,7 +25,7 @@ public class Routes {
     }
 
     public int getDuree() {
-        return duree;
+        return distance;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class Routes {
         return "Troncon[" +
                 "depart=" + VilleDepart.toString()+
                 ", arrivee=" + VilleArrivee.toString()+
-                ", duree=" + duree +
+                ", duree=" + distance +
                 " ligne=";
     }
 }
