@@ -1,22 +1,22 @@
 public class Routes {
 
     private int idRoute;
-    private Ville VilleDepart;
-    private Ville VilleArrivee;
+    private Villes VilleDepart;
+    private Villes VilleArrivee;
     private int duree;
 
-    public Routes(int idRoute, Ville VilleDepart, Ville VilleArrivee, int duree) {
+    public Routes(int idRoute, Villes VilleDepart, Villes VilleArrivee, int duree) {
         this.idRoute = idRoute;
         this.VilleDepart = VilleDepart;
         this.VilleArrivee = VilleArrivee;
         this.duree = duree;
     }
 
-    public Ville getVilleDepart() {
+    public Villes getVilleDepart() {
         return VilleDepart;
     }
 
-    public Ville getVilleArrivee() {
+    public Villes getVilleArrivee() {
         return VilleArrivee;
     }
 
