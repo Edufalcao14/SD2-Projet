@@ -89,6 +89,14 @@ public class Graph {
       }
     }
 
-
+    while (!villeArrivee.equals(villeDepart)){
+      for (Route r: mapRoutes.get(troncons.get(villeArrivee))) {
+        if(r.getVilleArrivee().equals(villeArrivee)){
+          chemin.add(r);
+          break;
+        }
+      }
+      villeArrivee = troncons.get(villeArrivee);
+    }
 
   }}
