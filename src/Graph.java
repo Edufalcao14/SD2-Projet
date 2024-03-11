@@ -49,23 +49,21 @@ public class Graph {
       Ville villeDepart = mapIdVilles.get(idVilleDepart);
       int idVilleArrivee = Integer.parseInt(tabRoutes[1]);
       Ville villeArrivee = mapIdVilles.get(idVilleArrivee);
-      Route routeVilleDepart = new Route(villeDepart, villeArrivee, Util.distance(villeArrivee.getLatitude(),
-          villeArrivee.getLongitude(), villeDepart.getLatitude(), villeDepart.getLongitude()));
+      Route routeVilleDepart = new Route(villeDepart, villeArrivee,
+          Util.distance(villeArrivee.getLatitude(),
+              villeArrivee.getLongitude(), villeDepart.getLatitude(), villeDepart.getLongitude()));
       mapRoutes.get(villeDepart).add(routeVilleDepart);
-      Route routeVilleArrivee = new Route(villeArrivee, villeDepart, Util.distance(villeArrivee.getLatitude(),
-          villeArrivee.getLongitude(), villeDepart.getLatitude(), villeDepart.getLongitude()));
+      Route routeVilleArrivee = new Route(villeArrivee, villeDepart,
+          Util.distance(villeArrivee.getLatitude(),
+              villeArrivee.getLongitude(), villeDepart.getLatitude(), villeDepart.getLongitude()));
       mapRoutes.get(villeArrivee).add(routeVilleArrivee); // Pour l'unidirection des routes
     }
   }
 
-  public String calculerItineraireMinimisantNombreRoutes(String depart, String arrivee){
-    if (depart == null || arrivee == null || depart.isBlank() || arrivee.isBlank()){
+  public String calculerItineraireMinimisantNombreRoutes(String depart, String arrivee) {
+    if (depart == null || arrivee == null || depart.isBlank() || arrivee.isBlank()) {
       throw new IllegalArgumentException("Veuillez entrer 2 noms de ville !");
     }
-    Set<Ville> villesVisitees = new HashSet<>();
-    Queue<Ville> queue = new LinkedList<>();
-    Map<Ville,Route> map = new HashMap<>();
-
   }
 
 }
