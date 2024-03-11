@@ -59,8 +59,8 @@ public class Graph {
     }
   }
 
-  public void calculerItineraireMinimisantNombreRoutes(String depart, String arrivee){
-    if (depart == null || arrivee == null || depart.isBlank() || arrivee.isBlank()){
+  public String calculerItineraireMinimisantNombreRoutes(String depart, String arrivee) {
+    if (depart == null || arrivee == null || depart.isBlank() || arrivee.isBlank()) {
       throw new IllegalArgumentException("Veuillez entrer 2 noms de ville !");
     }
 
@@ -75,28 +75,38 @@ public class Graph {
     file.addFirst(villeDepart);
     villesVisitee.add(villeDepart);
 
-
     //BFS
-    while(!villesVisitee.contains(villeArrivee)){
+    while (!villesVisitee.contains(villeArrivee)) {
       Ville villeDepartTemp = file.removeLast();
       for (Route r : mapRoutes.get(villeDepartTemp)) {
         Ville villeArriveeTemp = r.getVilleArrivee();
-        if(!villesVisitee.contains(villeArriveeTemp)) {
+        if (!villesVisitee.contains(villeArriveeTemp)) {
           file.addFirst(villeArriveeTemp);
           villesVisitee.add(villeArriveeTemp);
-          troncons.put(villeArriveeTemp,villeDepartTemp);
+          troncons.put(villeArriveeTemp, villeDepartTemp);
         }
       }
     }
 
-    while (!villeArrivee.equals(villeDepart)){
-      for (Route r: mapRoutes.get(troncons.get(villeArrivee))) {
-        if(r.getVilleArrivee().equals(villeArrivee)){
+    int longeurCheminTotal = 0;
+
+    //création du chemin en partant de l'arrivée jusqu'au départ
+    while (!villeArrivee.equals(villeDepart)) {
+      for (Route r : mapRoutes.get(troncons.get(villeArrivee))) {
+        if (r.getVilleArrivee().equals(villeArrivee)) {
           chemin.add(r);
+          longeurCheminTotal += r.getDistance();
           break;
         }
       }
       villeArrivee = troncons.get(villeArrivee);
     }
 
-  }}
+    int nbrRoutes = chemin.size();
+    String returnString =
+        " Trajet de " + depart + " à " + arrivee + " : " + nbrRoutes + " routes et "
+            + longeurCheminTotal + "km";
+
+    return returnString;
+    }
+  }
