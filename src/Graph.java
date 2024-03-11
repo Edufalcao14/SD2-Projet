@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -60,10 +61,35 @@ public class Graph {
     }
   }
 
-  public String calculerItineraireMinimisantNombreRoutes(String depart, String arrivee) {
+  public void calculerItineraireMinimisantNombreRoutes(String depart, String arrivee) {
     if (depart == null || arrivee == null || depart.isBlank() || arrivee.isBlank()) {
       throw new IllegalArgumentException("Veuillez entrer 2 noms de ville !");
     }
+
+    LinkedList<Ville> file = new LinkedList<>();
+    Set<Ville> villesVisitee = new HashSet<>();
+    Map<Ville, Ville> troncons = new HashMap<>();
+    List<Route> chemin = new ArrayList<>();
+
+    Ville villeDepart = mapVilles.get(depart);
+    Ville villeArrivee = mapVilles.get(arrivee);
+
+    file.addFirst(villeDepart);
+    villesVisitee.add(villeDepart);
+
+    //BFS
+    while (!villesVisitee.contains(villeArrivee)) {
+      Ville villeDepartTemp = file.removeLast();
+      for (Route r : mapRoutes.get(villeDepartTemp)) {
+        Ville villeArriveeTemp = r.getVilleArrivee();
+        if (!villesVisitee.contains(villeArriveeTemp)) {
+          file.addFirst(villeArriveeTemp);
+          villesVisitee.add(villeArriveeTemp);
+          troncons.put(villeArriveeTemp, villeDepartTemp);
+        }
+      }
+    }
+
   }
 
 }
