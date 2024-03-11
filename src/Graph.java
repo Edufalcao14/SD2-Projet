@@ -2,14 +2,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 public class Graph {
 
-  private Map<Ville, Set<Ville>> mapRoutes; // map des villes -> villes connectées
+  private Map<Ville, Set<Route>> mapRoutes; // map des villes -> villes connectées
   private Map<String, Ville> mapVilles; // map pour recuperer une ville sur base d'une string
   private Map<Integer, Ville> mapIdVilles; // map pour recuperer une ville sur base de son id
 
@@ -46,13 +49,23 @@ public class Graph {
       Ville villeDepart = mapIdVilles.get(idVilleDepart);
       int idVilleArrivee = Integer.parseInt(tabRoutes[1]);
       Ville villeArrivee = mapIdVilles.get(idVilleArrivee);
-      Route route = new Route(villeDepart, villeArrivee, Util.distance(villeArrivee.getLatitude(),
+      Route routeVilleDepart = new Route(villeDepart, villeArrivee, Util.distance(villeArrivee.getLatitude(),
           villeArrivee.getLongitude(), villeDepart.getLatitude(), villeDepart.getLongitude()));
-      mapRoutes.get(villeDepart).add(villeArrivee);
-      mapRoutes.get(villeArrivee).add(villeDepart); // Pour l'unidirection des routes
+      mapRoutes.get(villeDepart).add(routeVilleDepart);
+      Route routeVilleArrivee = new Route(villeArrivee, villeDepart, Util.distance(villeArrivee.getLatitude(),
+          villeArrivee.getLongitude(), villeDepart.getLatitude(), villeDepart.getLongitude()));
+      mapRoutes.get(villeArrivee).add(routeVilleArrivee); // Pour l'unidirection des routes
     }
   }
 
+  public String calculerItineraireMinimisantNombreRoutes(String depart, String arrivee){
+    if (depart == null || arrivee == null || depart.isBlank() || arrivee.isBlank()){
+      throw new IllegalArgumentException("Veuillez entrer 2 noms de ville !");
+    }
+    Set<Ville> villesVisitees = new HashSet<>();
+    Queue<Ville> queue = new LinkedList<>();
+    Map<Ville,Route> map = new HashMap<>();
 
+  }
 
 }
