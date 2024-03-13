@@ -59,7 +59,7 @@ public class Graph {
     }
   }
 
-  public String calculerItineraireMinimisantNombreRoutes(String depart, String arrivee) {
+  public void calculerItineraireMinimisantNombreRoutes(String depart, String arrivee) {
     if (depart == null || arrivee == null || depart.isBlank() || arrivee.isBlank()) {
       throw new IllegalArgumentException("Veuillez entrer 2 noms de ville !");
     }
@@ -106,7 +106,6 @@ public class Graph {
     String returnString =
         " Trajet de " + depart + " à " + arrivee + " : " + nbrRoutes + " routes et "
             + longeurCheminTotal + "km";
-
-    return returnString;
+    System.out.println(returnString);
     }
   }
