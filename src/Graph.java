@@ -92,7 +92,7 @@ public class Graph {
       }
     }
 
-    int longeurCheminTotal = 0;
+    double longeurCheminTotal = 0;
 
     //création du chemin en partant de l'arrivée jusqu'au départ
     while (!villeArrivee.equals(villeDepart)) {
@@ -107,9 +107,11 @@ public class Graph {
     }
 
     int nbrRoutes = chemin.size();
-    String returnString =
-        " Trajet de " + depart + " à " + arrivee + " : " + nbrRoutes + " routes et "
-            + longeurCheminTotal + "km";
-    System.out.println(returnString);
+    System.out.println(" Trajet de " + depart + " à " + arrivee + " : " + nbrRoutes + " routes et "
+            + longeurCheminTotal + " Kms");
+
+    for (Route r : chemin.reversed()){
+      System.out.println(r.getVilleDepart() + " -> " + r.getVilleArrivee()  +" ("+r.getDistance() +")");
+    }
     }
 }
