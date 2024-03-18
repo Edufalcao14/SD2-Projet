@@ -3,12 +3,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 public class Graph {
@@ -62,7 +62,6 @@ public class Graph {
   }
 
 
-
   public void calculerItineraireMinimisantNombreRoutes(String depart, String arrivee) {
     if (depart == null || arrivee == null || depart.isBlank() || arrivee.isBlank()) {
       throw new IllegalArgumentException("Veuillez entrer 2 noms de ville !");
@@ -108,10 +107,48 @@ public class Graph {
 
     int nbrRoutes = chemin.size();
     System.out.println(" Trajet de " + depart + " à " + arrivee + " : " + nbrRoutes + " routes et "
-            + longeurCheminTotal + " Kms");
+        + longeurCheminTotal + " Kms");
 
-    for (Route r : chemin.reversed()){
-      System.out.println(r.getVilleDepart() + " -> " + r.getVilleArrivee()  +" ("+r.getDistance() +")");
+    for (Route r : chemin.reversed()) {
+      System.out.println(
+          r.getVilleDepart() + " -> " + r.getVilleArrivee() + " (" + r.getDistance() + ")");
     }
+  }
+
+  public void calculerItineraireMinimisantKm(String depart, String arrivee) {
+    Map<Ville, Integer> etiquettesProvisoire = new HashMap<>();
+    Map<Ville, Integer> etiquettesDefinitive = new HashMap<>();
+    Map<Ville, Ville> mapVillesPrecedentes = new HashMap<>();
+    Ville villeDepart = mapVilles.get(depart);
+    Ville villeArrivee = mapVilles.get(arrivee);
+    etiquettesProvisoire.put(villeDepart, Integer.MAX_VALUE);
+    etiquettesDefinitive.put(villeDepart, 0);
+    List<Ville> chemin = new ArrayList<>();
+
+    //Dijkstra
+    double longueurMin = 0;
+    while (!villeArrivee.equals(villeDepart)) {
+      Ville villeMin = null;
+      for (Route route : mapRoutes.get(villeDepart)) {
+        if (!etiquettesProvisoire.containsKey(route.getVilleArrivee()) || (etiquettesProvisoire.get(route.getVilleArrivee()) > route.getDistance() + longueurMin) && !etiquettesDefinitive.containsKey(route.getVilleArrivee())) {
+          etiquettesProvisoire.put(route.getVilleArrivee(), (int) (longueurMin + route.getDistance()));
+        }
+      }
+
+      longueurMin = Integer.MAX_VALUE;
+      for (Ville ville : etiquettesProvisoire.keySet()) {
+        if (etiquettesProvisoire.get(ville) < longueurMin){
+          longueurMin = etiquettesProvisoire.get(ville);
+          villeMin = ville;
+        }
+      }
+      etiquettesProvisoire.put(villeMin, Integer.MAX_VALUE);
+      etiquettesDefinitive.put(villeMin, (int) longueurMin);
+      mapVillesPrecedentes.put(villeMin, villeDepart);
+      villeDepart = villeMin;
     }
+
+
+  }
+
 }
