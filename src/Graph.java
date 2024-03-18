@@ -4,11 +4,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 public class Graph {
@@ -116,39 +118,81 @@ public class Graph {
   }
 
   public void calculerItineraireMinimisantKm(String depart, String arrivee) {
-    Map<Ville, Integer> etiquettesProvisoire = new HashMap<>();
-    Map<Ville, Integer> etiquettesDefinitive = new HashMap<>();
-    Map<Ville, Ville> mapVillesPrecedentes = new HashMap<>();
+    Map<Ville, Double> distances = new HashMap<>();
+    Map<Ville, Ville> predecesseurs = new HashMap<>();
+    Set<Ville> visitees = new HashSet<>();
+    int nbrRoutes = 0;
+    PriorityQueue<Ville> filePrioritaire = new PriorityQueue<>(
+        Comparator.comparingDouble(distances::get));
+
     Ville villeDepart = mapVilles.get(depart);
     Ville villeArrivee = mapVilles.get(arrivee);
-    etiquettesProvisoire.put(villeDepart, Integer.MAX_VALUE);
-    etiquettesDefinitive.put(villeDepart, 0);
-    List<Ville> chemin = new ArrayList<>();
 
-    //Dijkstra
-    double longueurMin = 0;
-    while (!villeArrivee.equals(villeDepart)) {
-      Ville villeMin = null;
-      for (Route route : mapRoutes.get(villeDepart)) {
-        if (!etiquettesProvisoire.containsKey(route.getVilleArrivee()) || (etiquettesProvisoire.get(route.getVilleArrivee()) > route.getDistance() + longueurMin) && !etiquettesDefinitive.containsKey(route.getVilleArrivee())) {
-          etiquettesProvisoire.put(route.getVilleArrivee(), (int) (longueurMin + route.getDistance()));
-        }
+    // Initialisation des distances avec l'infini sauf pour le départ
+    for (Ville ville : mapVilles.values()) {
+      if (ville.equals(villeDepart)) {
+        distances.put(ville, 0.0);
+      } else {
+        distances.put(ville, Double.MAX_VALUE);
       }
-
-      longueurMin = Integer.MAX_VALUE;
-      for (Ville ville : etiquettesProvisoire.keySet()) {
-        if (etiquettesProvisoire.get(ville) < longueurMin){
-          longueurMin = etiquettesProvisoire.get(ville);
-          villeMin = ville;
-        }
-      }
-      etiquettesProvisoire.put(villeMin, Integer.MAX_VALUE);
-      etiquettesDefinitive.put(villeMin, (int) longueurMin);
-      mapVillesPrecedentes.put(villeMin, villeDepart);
-      villeDepart = villeMin;
     }
 
+    filePrioritaire.add(villeDepart);
 
+    while (!filePrioritaire.isEmpty()) {
+      Ville villeActuelle = filePrioritaire.poll();
+
+      if (villeActuelle.equals(villeArrivee)) {
+        break;
+      }
+
+      visitees.add(villeActuelle);
+
+      for (Route route : mapRoutes.get(villeActuelle)) {
+        Ville successeur = route.getVilleArrivee();
+        if (!visitees.contains(successeur)) {
+          double nouvelleDistance = distances.get(villeActuelle) + route.getDistance();
+          if (nouvelleDistance < distances.get(successeur)) {
+            distances.put(successeur, nouvelleDistance);
+            predecesseurs.put(successeur, villeActuelle);
+            filePrioritaire.add(successeur);
+          }
+        }
+      }
+    }
+
+    // Calcul du nombre de routes dans le chemin
+
+    Ville villeActuelle = villeArrivee;
+    while (predecesseurs.containsKey(villeActuelle)) {
+      nbrRoutes++;
+      villeActuelle = predecesseurs.get(villeActuelle);
+    }
+
+    // Affichage du chemin le plus court
+    System.out.println(
+        "Trajet de " + depart + " à " + arrivee + " : " + nbrRoutes + " routes et " + distances.get(
+            villeArrivee) + " Kms");
+
+    List<Route> chemin = new ArrayList<>();
+    villeActuelle = villeArrivee;
+    while (predecesseurs.containsKey(villeActuelle)) {
+      Ville predecesseur = predecesseurs.get(villeActuelle);
+      for (Route route : mapRoutes.get(predecesseur)) {
+        if (route.getVilleArrivee().equals(villeActuelle)) {
+          chemin.add(route);
+          break;
+        }
+      }
+      villeActuelle = predecesseur;
+    }
+
+    Collections.reverse(chemin);
+    for (Route route : chemin) {
+      System.out.println(
+          route.getVilleDepart() + " -> " + route.getVilleArrivee() + " (" + route.getDistance()
+              + ")");
+    }
   }
 
 }
